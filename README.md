@@ -1,6 +1,6 @@
-# VipKadr.az Job Scraper
+# VipKadr.az Candidate Scraper
 
-A high-performance async web scraper for extracting job listings from VipKadr.az using Python, asyncio, and aiohttp.
+A high-performance async web scraper for extracting candidate data from VipKadr.az job listings using Python, asyncio, and aiohttp.
 
 ## Features
 
@@ -113,20 +113,12 @@ The scraper is designed to be respectful:
 - Saves partial results if interrupted
 - Detailed logging for debugging
 
-## Example Usage
-
-```python
-import asyncio
-from vipkadr_scraper import VipKadrScraper
-
-async def custom_scrape():
-    async with VipKadrScraper(max_concurrent=5, delay=1) as scraper:
-        job_urls = await scraper.scrape_all_pages(start_page=1, end_page=5)
-        await scraper.scrape_all_jobs(job_urls)
-        scraper.save_to_csv("my_results.csv")
-
-asyncio.run(custom_scrape())
+**To scrape all candidates from all pages, simply run:**
+```bash
+python scrape_candidates.py
 ```
+
+The scraper will extract all candidate contact information (phone, email) from every job posting across all pages and save to CSV/JSON format.
 
 ## Legal Notice
 
