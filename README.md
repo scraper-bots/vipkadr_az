@@ -58,11 +58,10 @@ python run_full_scrape.py --help
 
 ## Output Files
 
-The scraper generates several output files:
+The scraper generates simple output files:
 
-- `vipkadr_jobs_YYYYMMDD_HHMMSS.csv/json` - Timestamped results
-- `vipkadr_jobs_latest.csv/json` - Latest results (overwritten each run)
-- `test_results.csv/json` - Test run results
+- `vipkadr_candidates.csv` - All candidate data in CSV format  
+- `vipkadr_candidates.json` - All candidate data in JSON format
 
 ## Data Structure
 

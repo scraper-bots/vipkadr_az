@@ -40,17 +40,10 @@ async def scrape_all_candidates():
                 print("❌ No candidate details were scraped")
                 return
             
-            # Save results
-            csv_filename = f"vipkadr_candidates_{timestamp}.csv"
-            json_filename = f"vipkadr_candidates_{timestamp}.json"
-            
+            # Save only latest results (most detailed version)
             print(f"\n💾 Saving candidate data...")
-            scraper.save_to_csv(csv_filename)
-            scraper.save_to_json(json_filename)
-            
-            # Also save as latest
-            scraper.save_to_csv("vipkadr_candidates_latest.csv")
-            scraper.save_to_json("vipkadr_candidates_latest.json")
+            scraper.save_to_csv("vipkadr_candidates.csv")
+            scraper.save_to_json("vipkadr_candidates.json")
             
             end_time = time.time()
             duration = end_time - start_time
@@ -71,17 +64,15 @@ async def scrape_all_candidates():
             print(f"   • Candidates with email addresses: {with_email} ({with_email/len(scraper.scraped_data)*100:.1f}%)")
             
             print(f"\n📁 Output Files:")
-            print(f"   • {csv_filename}")
-            print(f"   • {json_filename}")
-            print(f"   • vipkadr_candidates_latest.csv")
-            print(f"   • vipkadr_candidates_latest.json")
+            print(f"   • vipkadr_candidates.csv")
+            print(f"   • vipkadr_candidates.json")
             
         except KeyboardInterrupt:
             print("\n⚠️  Scraping interrupted by user")
             if scraper.scraped_data:
                 print(f"💾 Saving {len(scraper.scraped_data)} candidates scraped so far...")
-                scraper.save_to_csv(f"vipkadr_candidates_interrupted_{timestamp}.csv")
-                scraper.save_to_json(f"vipkadr_candidates_interrupted_{timestamp}.json")
+                scraper.save_to_csv("vipkadr_candidates.csv")
+                scraper.save_to_json("vipkadr_candidates.json")
         except Exception as e:
             print(f"❌ Error during scraping: {e}")
             import traceback

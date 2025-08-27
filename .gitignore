@@ -52,5 +52,5 @@ test_*
 *.log
 
 # Scraped data (uncomment if you don't want to commit output files)
-# vipkadr_candidates_*.csv
-# vipkadr_candidates_*.json
+# vipkadr_candidates.csv
+# vipkadr_candidates.json
