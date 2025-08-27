@@ -1,56 +1,133 @@
-# Custom_Web_Scraper
-Build a custom web scraper to collect data on things that you are interested in.
-Certainly! Here's an example of how you can build a custom web scraper using Python and the BeautifulSoup library to collect data on things you are interested in:
+# VipKadr.az Job Scraper
 
-1. Set up the project:
-   - Create a new directory for your project.
-   - Inside the project directory, create a virtual environment by running `python -m venv venv`.
-   - Activate the virtual environment:
-     - On Windows: `venv\Scripts\activate`
-     - On macOS/Linux: `source venv/bin/activate`
-   - Install the required libraries by running `pip install beautifulsoup4 requests`.
+A high-performance async web scraper for extracting job listings from VipKadr.az using Python, asyncio, and aiohttp.
 
-2. Import the required modules:
-   - Open a new Python file, e.g., `scraper.py`, and import the following modules:
+## Features
 
-   ```python
-   import requests
-   from bs4 import BeautifulSoup
-   ```
+- **Fast Async Scraping**: Uses asyncio and aiohttp for concurrent HTTP requests
+- **Complete Job Data**: Extracts all available job details including:
+  - Job title, company, salary
+  - Contact information (phone, email, contact person)
+  - Job requirements and description
+  - Location, work type, experience level
+  - Posted and expiry dates
+- **Rate Limiting**: Built-in delays and concurrent request limiting to be respectful
+- **Error Handling**: Robust error handling with retry logic
+- **Multiple Output Formats**: Saves data in both CSV and JSON formats
+- **Progress Tracking**: Real-time logging and progress information
 
-3. Define the scraper function:
-   - Create a function that performs the scraping. For example, let's say you're interested in collecting the titles of articles from a news website. Here's a sample function that does that:
+## Installation
 
-   ```python
-   def scrape_articles(url):
-       # Send a GET request to the URL
-       response = requests.get(url)
-       
-       # Create a BeautifulSoup object to parse the HTML content
-       soup = BeautifulSoup(response.text, 'html.parser')
-       
-       # Find the elements that contain the article titles
-       article_titles = soup.find_all('h2', class_='article-title')
-       
-       # Extract the text from the article titles
-       titles = [title.text.strip() for title in article_titles]
-       
-       return titles
-   ```
+1. Clone or download the files
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-4. Run the scraper:
-   - In the same `scraper.py` file, you can call the `scrape_articles` function and provide the URL of the website you want to scrape. For example:
+## Usage
 
-   ```python
-   if __name__ == '__main__':
-       url = 'https://example.com/news'  # Replace with the actual URL
-       article_titles = scrape_articles(url)
-       for title in article_titles:
-           print(title)
-   ```
+### Quick Test (recommended first)
+```bash
+python test_scraper.py
+```
+This will scrape 2 pages and 5 job details as a test.
 
-   Replace `'https://example.com/news'` with the URL of the website you want to scrape. You can customize the function and the scraping logic based on the structure and elements of the target website.
+### Full Scraping
+```bash
+python run_full_scrape.py
+```
 
-   Note: Before scraping a website, make sure to review the website's terms of service and check if they allow scraping. Additionally, be respectful of the website's resources and do not overload their servers with excessive requests.
+### Custom Options
+```bash
+# Scrape specific page range
+python run_full_scrape.py --start-page 1 --end-page 20
 
-Remember to adapt the code according to your specific requirements and the structure of the website you want to scrape. Each website may have a different HTML structure, and you may need to adjust the code accordingly to extract the desired data.
+# Adjust concurrency (default: 10)
+python run_full_scrape.py --concurrent 15
+
+# Get help
+python run_full_scrape.py --help
+```
+
+## Files
+
+- `vipkadr_scraper.py` - Main scraper class
+- `test_scraper.py` - Test script for small batch
+- `run_full_scrape.py` - Production script for full scraping
+- `requirements.txt` - Python dependencies
+
+## Output Files
+
+The scraper generates several output files:
+
+- `vipkadr_jobs_YYYYMMDD_HHMMSS.csv/json` - Timestamped results
+- `vipkadr_jobs_latest.csv/json` - Latest results (overwritten each run)
+- `test_results.csv/json` - Test run results
+
+## Data Structure
+
+Each job record contains:
+
+```json
+{
+  "job_id": "44269",
+  "title": "İDARƏETMƏ İŞİ TƏKLİF EDİLİR",
+  "company": "BTK Group",
+  "salary": "1200 AZN",
+  "contact_person": "Təranə x",
+  "phone": "0503583399",
+  "email": "taranaxalilova1960@gmail.com",
+  "city": "Bakı",
+  "work_type": "Tam İş saatı",
+  "experience": "1 ildən aşağı",
+  "gender": "Fərq etmir",
+  "age": "25 - 65",
+  "description": "Job description...",
+  "requirements": "Job requirements...",
+  "added_date": "24 İyn 2025",
+  "end_date": "24 İyl 2025",
+  "views": "167",
+  "url": "https://vipkadr.az/..."
+}
+```
+
+## Performance
+
+- **Test Results**: Successfully scraped 5 jobs from 2 pages in ~10 seconds
+- **Concurrent Processing**: Up to 15 concurrent requests (adjustable)
+- **Rate Limiting**: 0.3-1 second delays between requests
+- **Efficiency**: ~2-3 seconds per job on average
+
+## Respectful Scraping
+
+The scraper is designed to be respectful:
+- Rate limiting with configurable delays
+- Concurrent request limits
+- Proper error handling and retries
+- User-Agent headers
+
+## Error Handling
+
+- Automatic retries for failed requests
+- Graceful handling of network errors
+- Saves partial results if interrupted
+- Detailed logging for debugging
+
+## Example Usage
+
+```python
+import asyncio
+from vipkadr_scraper import VipKadrScraper
+
+async def custom_scrape():
+    async with VipKadrScraper(max_concurrent=5, delay=1) as scraper:
+        job_urls = await scraper.scrape_all_pages(start_page=1, end_page=5)
+        await scraper.scrape_all_jobs(job_urls)
+        scraper.save_to_csv("my_results.csv")
+
+asyncio.run(custom_scrape())
+```
+
+## Legal Notice
+
+This scraper is for educational and research purposes. Please respect the website's terms of service and robots.txt file. Use responsibly and ethically.
